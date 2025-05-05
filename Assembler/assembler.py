@@ -25,6 +25,8 @@ class Assembler():
                 jump = self.translator.jump(jump)
 
                 self.assembly += "111" + comp + dest + jump + "\n"
+            elif instruction == 'L':
+                symbol = self.parser.symbol()
         
         return self.assembly
 
@@ -41,4 +43,5 @@ M=D;JGT
 assembler = Assembler(hack_assembly)
 assembler.main()
 print(assembler.assembly)
+print(assembler.parser.symbol_table.symbol_table)
 

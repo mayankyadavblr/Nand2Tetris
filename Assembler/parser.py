@@ -1,3 +1,5 @@
+from symbol_table import SymbolTable
+
 class Parser():
     def __init__(self, code):
         code_lines = code.strip()
@@ -13,6 +15,7 @@ class Parser():
 
         self.line_iterator = -1
         self.code_length = len(self.code)
+        self.symbol_table = SymbolTable()
 
 
     def has_more_lines(self):
@@ -34,14 +37,17 @@ class Parser():
     def symbol(self):
         curr = self.code[self.line_iterator]
         if self.instruction_type() == "L":
-            return curr[1:-1]
+            return self.symbol_table.translate(curr[1:-1])
         elif self.instruction_type() == "A":
             out = curr[1:]
             if out.isdigit():
                 padding = 15 - len(out)
                 return "0"*padding + "{0:b}".format(int(out))
             else:
-                return out
+                out = self.symbol_table.translate(out)
+                out = "{0:b}".format(int(out))
+                padding = 15 - len(out)
+                return "0"*padding + out
     
     def dest(self):
         curr = self.code[self.line_iterator]
